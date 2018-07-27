@@ -1,0 +1,99 @@
+<!-- app/templates/student/course.html -->
+
+{% extends "main.html" %}
+{% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block wrapper%}<h1 class="display-4">Register Course</h1>{% endblock %}
+{% block body %}
+<div class="content-section">
+  <br/>
+  {{ utils.flashed_messages() }}
+  <br/>
+  <div class="center">
+    <br/>
+    {{ wtf.quick_form(form) }}
+  </div>
+</div>
+<script>
+    $(function() {
+
+    dept = $('#programme');
+    // jQuery selection for the 2 select boxes
+    var dropdown = {
+        department: dept,
+        course: $('#course'),
+        year: $('#study_year'),
+        sem: $('#semester')
+    };
+
+    // jQuery selection for the text field and dept field
+    var text = {
+      registration: $('#reg_num'),
+      department: dept
+    };
+
+    // call to update on load
+    updateDepartments();
+    updateCourses();
+
+    // function updates department list as student enters name
+    function updateDepartments() {
+        var send = {
+            text: text.registration.val()
+        };
+        text.department.empty();
+        $.getJSON("{{ url_for('student._get_departments') }}", send, function (data) {
+            data.forEach(function (item) {
+                text.department.append(
+                    $('<option>', {
+                        value: item[0],
+                        text: item[1]
+                    })
+                );
+            });
+            updateCourses();
+        });
+    }
+
+    // function to call XHR and update course drop down
+    function updateCourses() {
+        var send = {
+            department: dropdown.department.val(),
+            year: dropdown.year.val(),
+            sem: dropdown.sem.val()
+        };
+        dropdown.course.attr('disabled', 'disabled');
+        dropdown.course.empty();
+        $.getJSON("{{ url_for('student._get_courses') }}", send, function(data) {
+            data.forEach(function(item) {
+                dropdown.course.append(
+                    $('<option>', {
+                        value: item[0],
+                        text: item[1]
+                    })
+                );
+            });
+            dropdown.course.removeAttr('disabled');
+        });
+    }
+
+    text.registration.on('input', function () {
+       updateDepartments();
+    });
+
+    // event listener to state drop down change
+    dropdown.department.on('change', function() {
+        updateCourses();
+    });
+
+    dropdown.year.on('change',function () {
+        updateCourses();
+    });
+
+    dropdown.sem.on('change',function () {
+        updateCourses();
+    });
+
+});
+</script>
+{% endblock %}
