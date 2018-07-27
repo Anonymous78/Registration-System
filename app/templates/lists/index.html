@@ -1,0 +1,44 @@
+<!-- app/templates/lists/index.html -->
+
+{% extends "main.html" %}
+{% block wrapper %}<h1 class="display-4">{{ title }}</h1>{% endblock %}
+ {% block body %}
+     {% if not download %}{% block report %}{% endblock %}{% endif %}
+     <div class="content-section">
+         <div class="outer">
+             <div class="middle">
+                 <div class="inner">
+                     <h1 style="text-align:center;">{{ wrap.split()[-1] }}</h1>
+                     {% if rows %}
+                         <hr class="intro-divider">
+                         <div class="col-lg-12 col-sm-12 col-md-12">
+                             <table class="table table-bordered table-striped">
+                                 <thead>
+                                 <tr>
+                                     {% block heading %}{% endblock %}
+                                 </tr>
+                                 </thead>
+                                 <tbody>
+                                 {% block contents %}{% endblock %}
+                                 </tbody>
+                             </table>
+                         </div>
+                         {% if download %}<div class="download">{{ reg_no }}</div>{% endif %}
+                         {% if download %}<div class="date">{{ date }}</div>{% endif %}
+                         <div style="text-align: center">
+                     {% else %}
+                         <br>
+                         <div style="text-align: center">
+                            <h3> Nothing here. </h3>
+                            <hr class="intro-divider">
+                     {% endif %}
+                     {% if not download %}<a href="{{ url_for(url, pid=pid, download=to_download) }}" class="btn btn-default btn-lg">
+                         <i class="fa fa-plus"></i> {{ wrap }}
+                     </a> {% endif %}
+                     </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ {% endblock %}

@@ -1,0 +1,55 @@
+<!-- app/templates/student/home.html -->
+
+{% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block wrapper %}
+    <h1 class="display-4">Student Dashboard</h1>
+{% endblock %}
+{% block body %}
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message">
+                    <h1>Student Dashboard</h1>
+                    <br/>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <script>
+                        var messages = {{ messages | safe }};
+                        for (var i=0; i < messages.length; i++) {
+                            alert(messages[i]);
+                        }
+                    </script>
+                    {% endif %}
+                    {% endwith %}
+                    <br/>
+                    <h3>Here, you can register and sign into a class!</h3>
+                    <hr class="intro-divider"><br/>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <h4>
+                                <a href="{{ url_for('student.courses_') }}" style="font-size: medium">Course Registration</a>
+                            </h4>
+                        </li>
+                        <li class="divider"><h4>|</h4></li>
+                        <li class="list-inline-item">
+                            <h4>
+                                <a href="{{ url_for('student.registered_courses') }}" style="font-size: medium">Courses Registered</a>
+                            </h4>
+                        </li>
+                        <li class="divider"><h4>|</h4></li>
+                        <li class="list-inline-item">
+                            <h4><a href="{{ url_for('student.web_', pid=pid) }}" style="font-size: medium">Class Attendance</a></h4>
+                        </li>
+                        <li class="divider"><h4>|</h4></li>
+                        <li class="list-inline-item">
+                            <h4><a href="{{ url_for('student.classes') }}" style="font-size: medium">List Classes</a></h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

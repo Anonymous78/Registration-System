@@ -1,0 +1,51 @@
+<!-- app/templates/includes/_navbar.html -->
+
+<!--suppress ALL -->
+<nav class="navbar navbar-default">
+    <div class="header clearfix">
+        <a class="navbar-brand topnav" href={% if is_lecturer %}
+                "{{ url_for('staff.dashboard') }}">{% elif is_student %}
+                "{{ url_for('student.home') }}">{% else %}
+                "{{ url_for('home.index') }}"> {% endif %}
+        Class Attendance System</a>
+        <ul style="font-size: small" class="nav nav-pills float-right">
+            {% if current_user.is_authenticated %}
+                {% if is_lecturer %}
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('staff.dashboard') }}">Dashboard</a></li>
+                        {% if active %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('staff.running_class') }}">End Class</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('staff._start_class', pid=pid) }}">Start Class
+                            </a></li>
+                        {% endif %}
+                {% elif is_student %}
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('student.home') }}">Dashboard</a> </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('student.web_', pid=pid) }}">Attend Class</a> </li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link"><i class="fa fa-user"></i></a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link active" href="{{ url_for('home.index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('staff.login') }}">Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('student.login') }}">Students</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<script>
+    $(function () {
+        // call on load
+        getUserName();
+
+        function getUserName() {
+            table = '';
+            {% if is_lecturer %} table='Lecturer' {% elif is_student %} table='Student' {% endif %}
+            var send = {
+                id: {{ pid }},
+                table: table
+            }
+            $.getJSON("{{ url_for('home.get_name') }}", send, function (data) {
+                $('.fa-user').html(data).css({"font-size":"95%","font-weight":"bold"});
+            });
+        }
+    })
+</script>
